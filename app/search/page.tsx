@@ -269,7 +269,7 @@ async function PokemonGrid({ searchParams }: PageProps) {
           gap: 2,
         }}
       >
-        {pokemon.map((p) => <PokemonCard key={p.id} pokemon={p} />)}
+        {pokemon.map((p, i) => <PokemonCard key={p.id} pokemon={p} priority={i < 8} />)}
       </Box>
 
       {/* Pagination */}

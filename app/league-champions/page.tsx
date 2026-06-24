@@ -241,6 +241,7 @@ export default async function LeagueChampionsPage() {
                         component="img"
                         src={h.animatedSprite}
                         alt={h.name}
+                        loading="lazy"
                         sx={{ width: 96, height: 96, imageRendering: 'pixelated', filter: `drop-shadow(0 4px 12px ${ts.border}cc)` }}
                       />
                     ) : (

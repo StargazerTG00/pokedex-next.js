@@ -206,6 +206,7 @@ export default function ChampionCard({ data }: { data: ChampionData }) {
             component="img"
             src={data.animatedSprite}
             alt={`${data.name} animated`}
+            loading="lazy"
             sx={{
               width: 160,
               height: 160,

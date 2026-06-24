@@ -54,7 +54,7 @@ const MONO  = 'var(--font-geist-mono), monospace'
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <Typography sx={{ fontFamily: PIXEL, fontSize: '15px', color: '#a06060', letterSpacing: '0.25em', mb: 1 }}>
+    <Typography sx={{ fontFamily: PIXEL, fontSize: { xs: '10px', sm: '15px' }, color: '#a06060', letterSpacing: '0.25em', mb: 1 }}>
       {children}
     </Typography>
   )
@@ -109,13 +109,14 @@ export default async function Home() {
             <Link key={href} href={href} style={{ textDecoration: 'none' }}>
               <Box
                 sx={{
-                  fontFamily: PIXEL, fontSize: '13px', letterSpacing: '0.08em',
-                  px: 3, py: '10px', borderRadius: '4px', cursor: 'pointer',
+                  fontFamily: PIXEL, fontSize: { xs: '11px', sm: '13px' }, letterSpacing: '0.08em',
+                  px: { xs: 2.5, sm: 3 }, py: '10px', borderRadius: '4px', cursor: 'pointer',
                   color: primary ? '#1a0000' : '#f0c0c0',
                   background: primary ? 'linear-gradient(180deg, #ffe040 0%, #f8d030 50%, #d4a010 100%)' : 'transparent',
                   border: primary ? '2px solid #a07000' : '2px solid #7a0000',
                   boxShadow: primary ? '0 0 16px rgba(248,208,48,0.5), inset 0 -2px 0 rgba(0,0,0,0.2)' : '0 3px 0 #0d0000',
                   transition: 'all 0.15s',
+                  whiteSpace: 'nowrap',
                   '&:hover': { transform: 'translateY(-2px)', boxShadow: primary ? '0 0 28px rgba(248,208,48,0.7)' : '0 0 12px rgba(204,0,0,0.4)' },
                 }}
               >
@@ -199,7 +200,7 @@ export default async function Home() {
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: { xs: 1.5, sm: 2.5 }, flexWrap: 'wrap', mb: 4 }}>
           {TEAM_PREVIEW.map(({ name, id }) => (
             <Box key={id} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5, background: 'linear-gradient(160deg, #1e0000 0%, #100000 100%)', border: '1px solid #3d0000', borderRadius: '8px', p: 1.5, transition: 'all 0.2s', '&:hover': { borderColor: '#cc0000', transform: 'translateY(-4px)', boxShadow: '0 0 16px rgba(204,0,0,0.3)' } }}>
-              <Box component="img" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`} alt={name} sx={{ width: 72, height: 72, imageRendering: 'pixelated', filter: 'drop-shadow(0 2px 8px rgba(204,0,0,0.4))' }} />
+              <Box component="img" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`} alt={name} loading="lazy" sx={{ width: 72, height: 72, imageRendering: 'pixelated', filter: 'drop-shadow(0 2px 8px rgba(204,0,0,0.4))' }} />
               <Typography sx={{ fontFamily: PIXEL, fontSize: '9px', color: '#f0c0c0', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{name}</Typography>
             </Box>
           ))}

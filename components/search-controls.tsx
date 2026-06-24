@@ -65,12 +65,10 @@ export default function SearchControls() {
   const params   = useSearchParams()
   const [pending, startTransition] = useTransition()
 
-  // Controlled display state (updates instantly)
   const [query,  setQuery]  = useState(params.get('q')      ?? '')
   const [type,   setType]   = useState(params.get('type')   ?? '')
   const [region, setRegion] = useState(params.get('region') ?? '')
 
-  // Whether we're waiting for the debounce timer to fire
   const [debouncing, setDebouncing] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -81,7 +79,6 @@ export default function SearchControls() {
     if (r)    sp.set('region', r)
     if (page) sp.set('page',   page)
     const qs = sp.toString()
-    // Persist every filter state to sessionStorage
     if (typeof window !== 'undefined') {
       if (qs) sessionStorage.setItem(STORAGE_KEY, qs)
       else    sessionStorage.removeItem(STORAGE_KEY)
@@ -89,7 +86,6 @@ export default function SearchControls() {
     startTransition(() => router.push(pathname + (qs ? `?${qs}` : '')))
   }, [router, pathname])
 
-  // On mount: if URL is bare (/search with no params), restore from sessionStorage
   useEffect(() => {
     const hasUrlParams = params.get('q') || params.get('type') || params.get('region') || params.get('page')
     if (hasUrlParams) return
@@ -103,13 +99,11 @@ export default function SearchControls() {
       const pg = sp.get('page') ?? ''
       setQuery(q); setType(t); setRegion(r)
       startTransition(() => router.replace(pathname + `?${saved}`))
-      void pg // used via router.replace above
-    } catch { /* sessionStorage unavailable (SSR guard) */ }
-  // Run once on mount only
+      void pg
+    } catch { /* sessionStorage unavailable */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Text input: debounce the push, but update the input immediately
   const handleQuery = (v: string) => {
     setQuery(v)
     setDebouncing(true)
@@ -120,16 +114,8 @@ export default function SearchControls() {
     }, DEBOUNCE_MS)
   }
 
-  // Dropdowns: push immediately (no debounce needed)
-  const handleType = (v: string) => {
-    setType(v)
-    push(query, v, region)
-  }
-
-  const handleRegion = (v: string) => {
-    setRegion(v)
-    push(query, type, v)
-  }
+  const handleType = (v: string) => { setType(v); push(query, v, region) }
+  const handleRegion = (v: string) => { setRegion(v); push(query, type, v) }
 
   const clearAll = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -139,7 +125,6 @@ export default function SearchControls() {
     startTransition(() => router.push(pathname))
   }
 
-  // Cleanup timer on unmount
   useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current) }, [])
 
   const hasFilters = query || type || region
@@ -147,12 +132,14 @@ export default function SearchControls() {
 
   const selectSx = {
     fontFamily: PIXEL,
-    fontSize: '11px',
+    fontSize: { xs: '10px', sm: '11px' },
     color: '#f0c0c0',
     background: '#120000',
     border: '1.5px solid #3d0000',
     borderRadius: '4px',
-    minWidth: 150,
+    // On xs take full width; on sm use fixed min-width
+    width: { xs: '100%', sm: 'auto' },
+    minWidth: { xs: 0, sm: 150 },
     height: 44,
     '& .MuiSelect-select': { py: '0px', px: '14px', display: 'flex', alignItems: 'center' },
     '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
@@ -213,13 +200,14 @@ export default function SearchControls() {
           placeholder="Search by name or #id…"
           sx={{
             flex: 1,
-            fontFamily: MONO, fontSize: '15px', color: '#f0f0f0',
+            fontFamily: MONO,
+            fontSize: { xs: '13px', sm: '15px' },
+            color: '#f0f0f0',
             '& input::placeholder': { color: '#5a3030', opacity: 1 },
             '& input': { p: 0 },
           }}
         />
 
-        {/* Debounce progress bar */}
         {debouncing && (
           <Box sx={{
             position: 'absolute',
@@ -246,9 +234,22 @@ export default function SearchControls() {
         )}
       </Box>
 
-      {/* Filters row */}
-      <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
-        <Typography sx={{ fontFamily: PIXEL, fontSize: '11px', color: '#a06060', letterSpacing: '0.15em', flexShrink: 0 }}>
+      {/* Filters row — stacks on mobile */}
+      <Box sx={{
+        display: 'grid',
+        gridTemplateColumns: { xs: '1fr 1fr', sm: 'auto 1fr 1fr' },
+        gap: 1.5,
+        alignItems: 'center',
+      }}>
+        {/* "FILTER:" label — spans both columns on xs, sits in first column on sm+ */}
+        <Typography sx={{
+          fontFamily: PIXEL,
+          fontSize: '11px',
+          color: '#a06060',
+          letterSpacing: '0.15em',
+          flexShrink: 0,
+          display: { xs: 'none', sm: 'block' },
+        }}>
           FILTER:
         </Typography>
 
@@ -273,26 +274,30 @@ export default function SearchControls() {
             </MenuItem>
           ))}
         </Select>
-
-        {/* Active filter chips */}
-        {type && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, background: `${TYPE_COLORS[type]}22`, border: `1px solid ${TYPE_COLORS[type]}`, borderRadius: '3px', px: 1.25, py: '4px' }}>
-            <Box sx={{ width: 6, height: 6, borderRadius: '50%', background: TYPE_COLORS[type] }} />
-            <Typography sx={{ fontFamily: PIXEL, fontSize: '9px', color: TYPE_COLORS[type] }}>{type.toUpperCase()}</Typography>
-            <Box component="button" onClick={() => handleType('')} sx={{ background: 'none', border: 'none', cursor: 'pointer', color: TYPE_COLORS[type], display: 'flex', p: 0, ml: 0.5, opacity: 0.7, '&:hover': { opacity: 1 } }}>
-              <ClearIcon />
-            </Box>
-          </Box>
-        )}
-        {region && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, background: '#f8d03022', border: '1px solid #f8d030', borderRadius: '3px', px: 1.25, py: '4px' }}>
-            <Typography sx={{ fontFamily: PIXEL, fontSize: '9px', color: '#f8d030' }}>{region.toUpperCase()}</Typography>
-            <Box component="button" onClick={() => handleRegion('')} sx={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f8d030', display: 'flex', p: 0, ml: 0.5, opacity: 0.7, '&:hover': { opacity: 1 } }}>
-              <ClearIcon />
-            </Box>
-          </Box>
-        )}
       </Box>
+
+      {/* Active filter chips */}
+      {(type || region) && (
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+          {type && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, background: `${TYPE_COLORS[type]}22`, border: `1px solid ${TYPE_COLORS[type]}`, borderRadius: '3px', px: 1.25, py: '4px' }}>
+              <Box sx={{ width: 6, height: 6, borderRadius: '50%', background: TYPE_COLORS[type] }} />
+              <Typography sx={{ fontFamily: PIXEL, fontSize: '9px', color: TYPE_COLORS[type] }}>{type.toUpperCase()}</Typography>
+              <Box component="button" onClick={() => handleType('')} sx={{ background: 'none', border: 'none', cursor: 'pointer', color: TYPE_COLORS[type], display: 'flex', p: 0, ml: 0.5, opacity: 0.7, '&:hover': { opacity: 1 } }}>
+                <ClearIcon />
+              </Box>
+            </Box>
+          )}
+          {region && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, background: '#f8d03022', border: '1px solid #f8d030', borderRadius: '3px', px: 1.25, py: '4px' }}>
+              <Typography sx={{ fontFamily: PIXEL, fontSize: '9px', color: '#f8d030' }}>{region.toUpperCase()}</Typography>
+              <Box component="button" onClick={() => handleRegion('')} sx={{ background: 'none', border: 'none', cursor: 'pointer', color: '#f8d030', display: 'flex', p: 0, ml: 0.5, opacity: 0.7, '&:hover': { opacity: 1 } }}>
+                <ClearIcon />
+              </Box>
+            </Box>
+          )}
+        </Box>
+      )}
     </Box>
   )
 }

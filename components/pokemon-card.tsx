@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { TYPE_COLORS } from '@/lib/type-colors'
@@ -8,7 +9,6 @@ import { TYPE_COLORS } from '@/lib/type-colors'
 export { TYPE_COLORS }
 
 const PIXEL = 'var(--font-press-start), var(--font-geist-mono), monospace'
-const MONO  = 'var(--font-geist-mono), monospace'
 
 export type PokemonSummary = {
   id: number
@@ -18,7 +18,7 @@ export type PokemonSummary = {
   animatedSprite: string | null
 }
 
-export default function PokemonCard({ pokemon }: { pokemon: PokemonSummary }) {
+export default function PokemonCard({ pokemon, priority = false }: { pokemon: PokemonSummary; priority?: boolean }) {
   const primary = pokemon.types[0]
   const ts = TYPE_COLORS[primary] ?? TYPE_COLORS.normal
 
@@ -62,17 +62,30 @@ export default function PokemonCard({ pokemon }: { pokemon: PokemonSummary }) {
             background: `radial-gradient(ellipse at 50% 60%, ${ts.border}15 0%, transparent 70%)`,
           }}
         >
-          <Box
-            component="img"
-            src={pokemon.animatedSprite ?? pokemon.sprite}
-            alt={pokemon.name}
-            sx={{
-              width: pokemon.animatedSprite ? 80 : 88,
-              height: pokemon.animatedSprite ? 80 : 88,
-              imageRendering: 'pixelated',
-              filter: `drop-shadow(0 2px 8px ${ts.border}88)`,
-            }}
-          />
+          {pokemon.animatedSprite ? (
+            // GIFs must bypass the Next.js optimizer — it would break the animation
+            <Box
+              component="img"
+              src={pokemon.animatedSprite}
+              alt={pokemon.name}
+              loading={priority ? 'eager' : 'lazy'}
+              sx={{
+                width: 80,
+                height: 80,
+                imageRendering: 'pixelated',
+                filter: `drop-shadow(0 2px 8px ${ts.border}88)`,
+              }}
+            />
+          ) : (
+            <Image
+              src={pokemon.sprite}
+              alt={pokemon.name}
+              width={88}
+              height={88}
+              priority={priority}
+              style={{ imageRendering: 'pixelated', filter: `drop-shadow(0 2px 8px ${ts.border}88)` }}
+            />
+          )}
         </Box>
 
         {/* Name */}
@@ -81,6 +94,10 @@ export default function PokemonCard({ pokemon }: { pokemon: PokemonSummary }) {
             fontFamily: PIXEL, fontSize: '11px', letterSpacing: '0.06em',
             color: '#f0e0e0', textTransform: 'capitalize', mt: 0.75, mb: 0.5,
             textAlign: 'center', px: 1,
+            width: '100%',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }}
         >
           {pokemon.name}

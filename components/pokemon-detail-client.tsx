@@ -93,6 +93,7 @@ export default function PokemonDetailClient({ artworkUrl, animatedSprite, cryUrl
 
       {showAnimated && animatedSprite ? (
         <Box component="img" src={animatedSprite} alt={`${name} animated`}
+          loading="eager"
           sx={{ width: 160, height: 160, imageRendering: 'pixelated', filter: `drop-shadow(0 0 20px ${typeColor}cc)`, position: 'relative', zIndex: 1, mt: 3 }}
         />
       ) : (

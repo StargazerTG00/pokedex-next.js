@@ -71,7 +71,7 @@ function StatBar({ name, value, typeColor }: { name: string; value: number; type
   const pct = Math.min((value / 255) * 100, 100)
   const barColor = value >= 100 ? '#f8d030' : value >= 60 ? '#cc6600' : '#cc0000'
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 } }}>
       <Typography sx={{ fontFamily: PIXEL, fontSize: '11px', color: '#a06060', width: 32, textAlign: 'right', flexShrink: 0 }}>
         {STAT_LABELS[name] ?? name.slice(0, 3).toUpperCase()}
       </Typography>
@@ -81,7 +81,7 @@ function StatBar({ name, value, typeColor }: { name: string; value: number; type
       <Box sx={{ flex: 1, height: 8, background: '#0d0000', border: `1px solid ${typeColor}33`, borderRadius: '3px', overflow: 'hidden' }}>
         <Box sx={{ width: `${pct}%`, height: '100%', background: `linear-gradient(90deg, ${barColor}66, ${barColor})`, boxShadow: `0 0 8px ${barColor}` }} />
       </Box>
-      <Typography sx={{ fontFamily: PIXEL, fontSize: '9px', color: '#5a3030', width: 28, flexShrink: 0 }}>
+      <Typography sx={{ display: { xs: 'none', sm: 'block' }, fontFamily: PIXEL, fontSize: '9px', color: '#5a3030', width: 28, flexShrink: 0 }}>
         {pct.toFixed(0)}%
       </Typography>
     </Box>
