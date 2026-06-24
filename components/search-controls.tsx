@@ -162,17 +162,19 @@ export default function SearchControls() {
   }
 
   const menuSx = {
-    PaperProps: {
-      sx: {
-        background: '#120000',
-        border: '1.5px solid #3d0000',
-        borderRadius: '4px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.8)',
-        '& .MuiMenuItem-root': {
-          fontFamily: PIXEL, fontSize: '11px', color: '#f0c0c0',
-          py: '10px',
-          '&:hover': { background: '#2a0000' },
-          '&.Mui-selected': { background: '#3d0000', color: '#f8d030' },
+    slotProps: {
+      paper: {
+        sx: {
+          background: '#120000',
+          border: '1.5px solid #3d0000',
+          borderRadius: '4px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.8)',
+          '& .MuiMenuItem-root': {
+            fontFamily: PIXEL, fontSize: '11px', color: '#f0c0c0',
+            py: '10px',
+            '&:hover': { background: '#2a0000' },
+            '&.Mui-selected': { background: '#3d0000', color: '#f8d030' },
+          },
         },
       },
     },
