@@ -44,7 +44,7 @@ const TEAM_PREVIEW = [
   { name: 'sceptile',  id: 254 },
   { name: 'haunter',   id: 93  },
   { name: 'swampert',  id: 260 },
-  { name: 'tyranitar', id: 248 },
+  { name: 'metagross', id: 376 },
 ]
 
 const SKILLS = ['Node.js', 'Next.js', 'React', 'Python', 'FastAPI', 'MongoDB', 'TypeScript', 'JavaScript', 'REST APIs']
