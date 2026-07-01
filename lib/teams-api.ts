@@ -129,7 +129,6 @@ export async function addMember(
 
 export async function updateMember(
   token: string,
-  _teamId: number,
   memberId: number,
   patch: Partial<Pick<TeamMember, 'nickname' | 'position'>>,
 ): Promise<TeamMember> {
@@ -143,7 +142,6 @@ export async function updateMember(
 
 export async function removeMember(
   token: string,
-  _teamId: number,
   memberId: number,
 ): Promise<void> {
   const res = await fetch(`${BASE}/team-members/${memberId}/`, {

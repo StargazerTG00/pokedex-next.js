@@ -311,8 +311,8 @@ export default async function Home() {
             // DEV NOTE
           </Typography>
           <Typography sx={{ fontFamily: MONO, fontSize: '11px', color: '#886868', lineHeight: 2 }}>
-            This project was made with Next.js, experimenting with libraries and new functionalities —
-            also a way to kill some time doing side projects about things I love.
+            This project was made with Next.js, experimenting with libraries and new functionalities with experimenting also with Django.
+            Also a way to kill some time doing side projects about things I love.
             Pokémon being one of them, since I&apos;ve been playing multiple Pokémon games on my Switch 2.
           </Typography>
         </Box>
