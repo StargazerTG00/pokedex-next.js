@@ -52,7 +52,7 @@ const navItemsBase = [
   { label: 'SEARCH',    href: '/search',          clearSearch: true,  authOnly: false },
   { label: 'CHAMPIONS', href: '/league-champions', clearSearch: false, authOnly: false },
   { label: 'MY TEAMS',  href: '/teams',           clearSearch: false, authOnly: true  },
-  { label: 'ABOUT',     href: '/about',           clearSearch: false, authOnly: false },
+  { label: 'ABOUT ME',     href: '/about',           clearSearch: false, authOnly: false },
 ]
 
 // Reusable nav button style factory
